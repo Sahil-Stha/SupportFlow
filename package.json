@@ -1,0 +1,11 @@
+{
+    "name": "supportflow-root",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "postinstall": "cd backend && npm install && npx prisma generate && cd ../frontend && npm install"
+    },
+    "engines": {
+        "node": "18.x"
+    }
+}
