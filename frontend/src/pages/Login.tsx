@@ -80,12 +80,9 @@ const Login: React.FC = () => {
                     <div className="flex justify-center space-x-4 text-slate-400">
                         <Link to="/register" className="hover:text-indigo-400 transition-colors">Create Account</Link>
                         <span className="text-slate-600">|</span>
-                        <button
-                            onClick={() => toast('Password reset feature coming soon!', { icon: '🚧' })}
-                            className="hover:text-indigo-400 transition-colors"
-                        >
-                            Forgot Password?
-                        </button>
+                        <Link to="/forgot-password" className="text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors">
+                            Forgot password?
+                        </Link>
                     </div>
                     <div>
                         <a href="mailto:support@supportflow.com" className="text-slate-500 hover:text-indigo-400 transition-colors">
