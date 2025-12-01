@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  firstName     String    @map("first_name")
+  lastName      String    @map("last_name")
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  role          String    @default("USER") // USER, TECH, ADMIN
+  department    String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  ticketsCreated Ticket[] @relation("CreatedBy")
+  ticketsAssigned Ticket[] @relation("AssignedTo")
+  comments       TicketComment[]
+  assets         Asset[]
+  assetHistory   AssetHistory[]
+
+  @@map("users")
+}
+
+model Ticket {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String
+  status      String       @default("NEW") // NEW, IN_PROGRESS, ON_HOLD, RESOLVED, CLOSED
+  priority    String       @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  category    String
+  createdById Int          @map("created_by")
+  assignedToId Int?        @map("assigned_to")
+  assetId     Int?         @map("asset_id")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  resolvedAt  DateTime?    @map("resolved_at")
+
+  createdBy   User         @relation("CreatedBy", fields: [createdById], references: [id])
+  assignedTo  User?        @relation("AssignedTo", fields: [assignedToId], references: [id])
+  asset       Asset?       @relation(fields: [assetId], references: [id])
+  comments    TicketComment[]
+
+  @@map("tickets")
+}
+
+model TicketComment {
+  id           Int      @id @default(autoincrement())
+  ticketId     Int      @map("ticket_id")
+  userId       Int      @map("user_id")
+  comment      String
+  internalOnly Boolean  @default(false) @map("internal_only")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  ticket       Ticket   @relation(fields: [ticketId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@map("ticket_comments")
+}
+
+model Asset {
+  id             Int         @id @default(autoincrement())
+  assetTag       String      @unique @map("asset_tag")
+  serialNumber   String      @map("serial_number")
+  type           String
+  brand          String
+  model          String
+  status         String      @default("IN_STOCK") // IN_STOCK, ASSIGNED, IN_REPAIR, RETIRED
+  assignedToId   Int?        @map("assigned_to")
+  location       String
+  purchaseDate   DateTime?   @map("purchase_date")
+  warrantyExpiry DateTime?   @map("warranty_expiry")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  assignedTo     User?       @relation(fields: [assignedToId], references: [id])
+  tickets        Ticket[]
+  history        AssetHistory[]
+
+  @@map("assets")
+}
+
+model AssetHistory {
+  id         Int      @id @default(autoincrement())
+  assetId    Int      @map("asset_id")
+  changedById Int     @map("changed_by")
+  changeType String   @map("change_type")
+  oldValue   String?  @map("old_value")
+  newValue   String?  @map("new_value")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  asset      Asset    @relation(fields: [assetId], references: [id])
+  changedBy  User     @relation(fields: [changedById], references: [id])
+
+  @@map("asset_history")
+}
