@@ -21,13 +21,21 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // Routes
-app.use('/auth', authRoutes);
-app.use('/tickets', ticketRoutes);
-app.use('/assets', assetRoutes);
-app.use('/stats', statsRoutes);
+const apiRouter = express.Router();
+apiRouter.use('/auth', authRoutes);
+apiRouter.use('/tickets', ticketRoutes);
+apiRouter.use('/assets', assetRoutes);
+apiRouter.use('/stats', statsRoutes);
+
+// Mount API router at both / and /api to handle Vercel rewrites and local dev
+app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 // Health Check
 app.get('/health', (req, res) => {
+    res.json({ status: 'ok' });
+});
+app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
 });
 
