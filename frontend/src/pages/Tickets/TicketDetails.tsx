@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import client from '../../api/client';
 import StatusBadge from '../../components/StatusBadge';
 import { useAuth } from '../../context/AuthContext';
@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast';
 
 const TicketDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const [ticket, setTicket] = useState<any>(null);
     const [newComment, setNewComment] = useState('');
     const [loading, setLoading] = useState(true);
@@ -60,6 +61,21 @@ const TicketDetails: React.FC = () => {
         } catch (error) {
             toast.error('Failed to add comment');
             console.error('Failed to add comment', error);
+        }
+    };
+
+    const handleDeleteTicket = async () => {
+        if (!window.confirm('Are you sure you want to delete this ticket? This action cannot be undone.')) {
+            return;
+        }
+
+        try {
+            await client.delete(`/tickets/${id}`);
+            toast.success('Ticket deleted successfully');
+            navigate('/tickets');
+        } catch (error) {
+            toast.error('Failed to delete ticket');
+            console.error('Failed to delete ticket', error);
         }
     };
 
@@ -143,6 +159,16 @@ const TicketDetails: React.FC = () => {
                                 <option value="CRITICAL">Critical</option>
                             </select>
                         </div>
+                        {user?.role === 'ADMIN' && ticket.status === 'CLOSED' && (
+                            <div className="flex items-end">
+                                <button
+                                    onClick={handleDeleteTicket}
+                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                >
+                                    Delete Ticket
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

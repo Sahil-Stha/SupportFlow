@@ -128,3 +128,30 @@ export const addComment = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+export const deleteTicket = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        const ticket = await prisma.ticket.findUnique({
+            where: { id: Number(id) },
+        });
+
+        if (!ticket) {
+            return res.status(404).json({ error: 'Ticket not found' });
+        }
+
+        if (ticket.status !== 'CLOSED') {
+            return res.status(400).json({ error: 'Only closed tickets can be deleted' });
+        }
+
+        await prisma.ticket.delete({
+            where: { id: Number(id) },
+        });
+
+        res.json({ message: 'Ticket deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
