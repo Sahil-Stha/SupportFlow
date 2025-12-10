@@ -29,30 +29,34 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
+import { ThemeProvider } from './context/ThemeContext';
+
 const App: React.FC = () => {
   return (
-    <Router>
-      <Toaster position="top-right" />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+    <ThemeProvider>
+      <Router>
+        <Toaster position="top-right" />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
-        <Route path="/" element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<TicketList />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="tickets/new" element={<CreateTicket />} />
-          <Route path="tickets/:id" element={<TicketDetails />} />
-          <Route path="assets" element={<AssetList />} />
-          <Route path="assets/:id" element={<AssetDetails />} />
-        </Route>
-      </Routes>
-    </Router>
+          <Route path="/" element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }>
+            <Route index element={<TicketList />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="tickets/new" element={<CreateTicket />} />
+            <Route path="tickets/:id" element={<TicketDetails />} />
+            <Route path="assets" element={<AssetList />} />
+            <Route path="assets/:id" element={<AssetDetails />} />
+          </Route>
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 };
 

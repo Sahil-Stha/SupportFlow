@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Ticket, Monitor, LogOut, PlusCircle } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { LayoutDashboard, Ticket, Monitor, LogOut, PlusCircle, Moon, Sun } from 'lucide-react';
 import clsx from 'clsx';
 
 const Layout: React.FC = () => {
     const { user, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -62,7 +64,14 @@ const Layout: React.FC = () => {
                     })}
                 </nav>
 
-                <div className="p-4 border-t border-slate-700">
+                <div className="p-4 border-t border-slate-700 space-y-2">
+                    <button
+                        onClick={toggleTheme}
+                        className="flex items-center w-full px-4 py-2 text-sm font-medium text-slate-400 rounded-md hover:bg-slate-800 hover:text-white transition-colors"
+                    >
+                        {theme === 'dark' ? <Sun className="mr-3 h-5 w-5" /> : <Moon className="mr-3 h-5 w-5" />}
+                        {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                    </button>
                     <button
                         onClick={handleLogout}
                         className="flex items-center w-full px-4 py-2 text-sm font-medium text-red-400 rounded-md hover:bg-red-500/10 hover:text-red-300 transition-colors"

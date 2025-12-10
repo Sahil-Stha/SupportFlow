@@ -72,7 +72,7 @@ const TicketDetails: React.FC = () => {
         try {
             await client.delete(`/tickets/${id}`);
             toast.success('Ticket deleted successfully');
-            navigate('/tickets');
+            navigate('/');
         } catch (error) {
             toast.error('Failed to delete ticket');
             console.error('Failed to delete ticket', error);
