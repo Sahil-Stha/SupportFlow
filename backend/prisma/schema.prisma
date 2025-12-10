@@ -47,7 +47,6 @@ model Ticket {
   assignedTo  User?        @relation("AssignedTo", fields: [assignedToId], references: [id])
   asset       Asset?       @relation(fields: [assetId], references: [id])
   comments    TicketComment[]
-  attachments Attachment[]
 
   @@map("tickets")
 }
@@ -64,19 +63,6 @@ model TicketComment {
   user         User     @relation(fields: [userId], references: [id])
 
   @@map("ticket_comments")
-}
-
-model Attachment {
-  id        Int      @id @default(autoincrement())
-  ticketId  Int      @map("ticket_id")
-  fileName  String   @map("file_name")
-  filePath  String   @map("file_path")
-  fileType  String   @map("file_type")
-  uploadedAt DateTime @default(now()) @map("uploaded_at")
-
-  ticket    Ticket   @relation(fields: [ticketId], references: [id])
-
-  @@map("attachments")
 }
 
 model Asset {

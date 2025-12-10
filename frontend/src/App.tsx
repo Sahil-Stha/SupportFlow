@@ -14,8 +14,6 @@ import AssetDetails from './pages/Assets/AssetDetails';
 
 import { Toaster } from 'react-hot-toast';
 import Dashboard from './pages/Dashboard';
-import { ThemeProvider } from './context/ThemeContext';
-import { SocketProvider } from './context/SocketContext';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -33,32 +31,28 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <SocketProvider>
-        <Router>
-          <Toaster position="top-right" />
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+    <Router>
+      <Toaster position="top-right" />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
-            <Route path="/" element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }>
-              <Route index element={<TicketList />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="tickets/new" element={<CreateTicket />} />
-              <Route path="tickets/:id" element={<TicketDetails />} />
-              <Route path="assets" element={<AssetList />} />
-              <Route path="assets/:id" element={<AssetDetails />} />
-            </Route>
-          </Routes>
-        </Router>
-      </SocketProvider>
-    </ThemeProvider>
+        <Route path="/" element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<TicketList />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="tickets/new" element={<CreateTicket />} />
+          <Route path="tickets/:id" element={<TicketDetails />} />
+          <Route path="assets" element={<AssetList />} />
+          <Route path="assets/:id" element={<AssetDetails />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 };
 
