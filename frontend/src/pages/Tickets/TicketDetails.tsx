@@ -159,7 +159,7 @@ const TicketDetails: React.FC = () => {
                                 <option value="CRITICAL">Critical</option>
                             </select>
                         </div>
-                        {user?.role === 'ADMIN' && ticket.status === 'CLOSED' && (
+                        {user?.role === 'ADMIN' && ticket.status?.toUpperCase() === 'CLOSED' && (
                             <div className="flex items-end">
                                 <button
                                     onClick={handleDeleteTicket}
