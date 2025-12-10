@@ -145,6 +145,11 @@ export const deleteTicket = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Only closed tickets can be deleted' });
         }
 
+        // Delete related comments first
+        await prisma.ticketComment.deleteMany({
+            where: { ticketId: Number(id) },
+        });
+
         await prisma.ticket.delete({
             where: { id: Number(id) },
         });
